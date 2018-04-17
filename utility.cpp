@@ -10,6 +10,7 @@
 #include "RGB_LED.h"
 
 #define RGB_LED_BRIGHTNESS 32
+#define AUTO_HEATING_KEY "auto_heating"
 
 DevI2C *i2c;
 HTS221Sensor *sensor;
@@ -68,12 +69,12 @@ bool parseTwinMessage(DEVICE_TWIN_UPDATE_STATE updateState, const char *message)
         JSON_Object *desired_object = json_object_get_object(root_object, "desired");
         if (desired_object != NULL)
         {
-            heatingOn = json_object_get_boolean(desired_object, "heatingOn");
+            heatingOn = json_object_get_boolean(desired_object, AUTO_HEATING_KEY);
         }
     }
     else
     {
-        heatingOn = json_object_get_boolean(root_object, "heatingOn");
+        heatingOn = json_object_get_boolean(root_object, AUTO_HEATING_KEY);
     }
     startHeating = heatingOn;
     json_value_free(root_value);
