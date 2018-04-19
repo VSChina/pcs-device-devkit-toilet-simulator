@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
 // To get started please visit https://microsoft.github.io/azure-iot-developer-kit/docs/projects/connect-iot-hub?utm_source=ArduinoExtension&utm_medium=ReleaseNote&utm_campaign=VSCode
 #include "AZ3166WiFi.h"
@@ -8,8 +8,8 @@
 #include "config.h"
 #include "utility.h"
 
-#define REPORT_HEATING_TEMPLATE "{\"__heatingOn\": %s}"
-#define REPORT_USAGE_TEMPLATE "{\"__beingUsed\": %s}"
+#define REPORT_HEATING_TEMPLATE "{\"auto_heating\": %s}"
+#define REPORT_USAGE_TEMPLATE "{\"being_used\": %s}"
 
 static bool hasWifi = false;
 int messageCount = 1;
@@ -181,6 +181,10 @@ void sendMessage(char *type, char *startTime, char *endTime)
   DevKitMQTTClient_Event_AddProp(message, "type", type);
   DevKitMQTTClient_Event_AddProp(message, "startTime", startTime);
   DevKitMQTTClient_Event_AddProp(message, "endTime", endTime);
+
+  DevKitMQTTClient_Event_AddProp(message, "$$CreationTimeUtc", endTime);
+  DevKitMQTTClient_Event_AddProp(message, "$$MessageSchema", "Name");
+  DevKitMQTTClient_Event_AddProp(message, "$$ContentType", "JSON");
 
   DevKitMQTTClient_SendEventInstance(message);
 }
